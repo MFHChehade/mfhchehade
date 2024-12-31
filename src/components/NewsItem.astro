@@ -6,14 +6,30 @@ interface Props {
 }
 
 const { date, content, link } = Astro.props;
----
 
+// Check if the content includes "Paper"
+const hasPaper = content.includes("Paper");
+
+// Split content into parts: before and after "Paper"
+let preText = "";
+let postText = "";
+
+if (hasPaper && link) {
+  const parts = content.split("Paper");
+  preText = parts[0];
+  postText = parts[1].replace(/accepted to NAPS 2024/, 'accepted to <strong>NAPS 2024</strong>');
+}
+---
 <div class="news-item">
   <strong>{date}:</strong>
-  {link ? (
-    <a href={link} target="_blank" rel="noopener noreferrer">{content}</a>
+  {hasPaper && link ? (
+    <>
+      {preText}
+      <a href={link} target="_blank" rel="noopener noreferrer">Paper</a>
+      <span set:html={postText} />
+    </>
   ) : (
-    <span>{content}</span>
+    <span set:html={content} />
   )}
 </div>
 
